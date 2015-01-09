@@ -1,0 +1,6 @@
+[
+    {
+      "repository": "android_kernel_ouya_ouya_1_1",
+      "target_path": "kernel/ouya/ouya_1_1"
+    }
+]

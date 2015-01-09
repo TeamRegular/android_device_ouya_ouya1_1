@@ -1,0 +1,14 @@
+/dev/knvmap                       u:object_r:knv_device:s0
+/dev/nvhost.*                     u:object_r:nvhost_device:s0
+/dev/nvhost-ctrl                  u:object_r:gpu_device:s0
+/dev/nvhost-gr2d                  u:object_r:gpu_device:s0
+/dev/nvhost-gr3d                  u:object_r:gpu_device:s0
+/dev/nvmap                        u:object_r:gpu_device:s0
+/dev/ttyHS2                       u:object_r:hci_attach_dev:s0
+
+/data/tf(/.*)?                    u:object_r:tee_data_file:s0
+
+/sys/devices/tegradc\.0(/.*)?                u:object_r:sysfs_devices_tegradc:s0
+/sys/devices/tegradc\.1(/.*)?                u:object_r:sysfs_devices_tegradc:s0
+#/sys/devices/platform/bluedroid_pm.0/rfkill/rfkill0/state   --  u:object_r:sysfs_bluetooth_writable:s0
+#/sys/devices/platform/bluedroid_pm.0/rfkill/rfkill0/type    --  u:object_r:sysfs_bluetooth_writable:s0

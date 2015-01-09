@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+** Copyright 2011, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+
+<!-- These resources are around just to allow their values to be customized
+     for different hardware and product builds. -->
+<resources>
+    <string name="config_datause_iface" translatable="false">wlan0</string>
+
+    <bool name="config_allowAllRotations">false</bool>
+
+    <!-- Flag indicating that this device does not rotate and will always remain in its default
+         orientation. Activities that desire to run in a non-compatible orientation will be run
+         from an emulated display within the physical display. -->
+    <bool name="config_forceDefaultOrientation">true</bool>
+
+    <string-array translatable="false" name="networkAttributes">
+        <item>"wifi,1,1,2,-1,true"</item>
+        <item>"bluetooth,7,7,0,-1,true"</item>
+        <item>"ethernet,9,9,9,-1,true"</item>
+    </string-array>
+
+    <string-array translatable="false" name="radioAttributes">
+        <item>"1,1"</item>
+        <item>"7,1"</item>
+        <item>"9,1"</item>
+    </string-array>
+
+    <!-- List of regexpressions describing the interface (if any) that represent tetherable
+         USB interfaces.  If the device doesn't want to support tething over USB this should
+         be empty.  An example would be "usb.*" -->
+    <string-array translatable="false" name="config_tether_usb_regexs">
+        <item>"rndis0"</item>
+    </string-array>
+
+    <!-- List of regexpressions describing the interface (if any) that represent tetherable
+         Wifi interfaces.  If the device doesn't want to support tethering over Wifi this
+         should be empty.  An example would be "softap.*" -->
+    <string-array translatable="false" name="config_tether_wifi_regexs">
+        <item>"wlan0"</item>
+    </string-array>
+
+    <!-- List of regexpressions describing the interface (if any) that represent tetherable
+         bluetooth interfaces.  If the device doesn't want to support tethering over bluetooth this
+         should be empty. -->
+    <string-array translatable="false" name="config_tether_bluetooth_regexs">
+        <item>"bt-pan"</item>
+    </string-array>
+
+    <!-- Regex of wired ethernet ifaces -->
+    <string translatable="false" name="config_ethernet_iface_regex">eth\\d</string>
+
+    <bool translatable="false" name="config_wifi_background_scan_support">true</bool>
+
+    <!-- Boolean indicating whether the wifi chipset has dual frequency band support -->
+    <bool translatable="false" name="config_wifi_dual_band_support">true</bool>
+
+    <bool name="config_animateScreenLights">false</bool>
+
+    <bool name="config_voice_capable">false</bool>
+
+    <bool name="config_sms_capable">false</bool>
+
+    <bool name="config_showNavigationBar">true</bool>
+
+    <!--  Maximum number of supported users -->
+    <integer name="config_multiuserMaximumUsers">8</integer>
+    <!-- Whether UI for multi user should be shown -->
+    <bool name="config_enableMultiUserUI">true</bool>
+
+    <integer name="config_deviceHardwareKeys">0</integer>
+
+    <bool name="config_enableWifiDisplay">true</bool>
+
+</resources>

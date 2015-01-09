@@ -1,0 +1,226 @@
+import init.cardhu.usb.rc
+
+on early-init
+    mount debugfs debugfs /sys/kernel/debug
+
+on init
+    mkdir /mnt/shell/emulated 0700 shell shell
+    mkdir /storage/emulated 0555 root root
+
+    export EXTERNAL_STORAGE /storage/emulated/legacy
+    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    export EMULATED_STORAGE_TARGET /storage/emulated
+    export SECONDARY_STORAGE /storage/usbdisk
+
+    # Support legacy paths
+    symlink /storage/emulated/legacy /sdcard
+    symlink /storage/emulated/legacy /mnt/sdcard
+    symlink /storage/emulated/legacy /storage/sdcard0
+    symlink /mnt/shell/emulated/0 /storage/emulated/legacy
+
+    # USB OTG support
+    mkdir /mnt/media_rw/usbdisk 0700 media_rw media_rw
+    mkdir /storage/usbdisk 0700 root root
+    symlink /storage/usbdisk /mnt/usbdisk
+    symlink /mnt/usbdisk /usbdisk
+
+on fs
+    setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
+    setprop ro.crypto.umount_sd false
+    setprop ro.crypto.fuse_sdcard true
+    mount_all /fstab.cardhu
+
+on post-fs-data
+    mkdir /data/nvcam 0700 media camera
+
+    mkdir /data/media 0770 media_rw media_rw
+
+    # Set indication (checked by vold) that we have finished this action
+    setprop vold.post_fs_data_done 1
+
+on boot
+
+    # Bluetooth UART device
+    chmod 0660 /dev/ttyHS2
+    chown bluetooth net_bt_stack /dev/ttyHS2
+
+    # Bluetooth power up/down interface
+    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chmod 0660 /sys/class/rfkill/rfkill0/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
+
+    # Bluetooth MAC address programming
+    chown bluetooth net_bt_stack ro.bt.bdaddr_path
+    chown bluetooth net_bt_stack /system/etc/bluetooth
+    chown bluetooth net_bt_stack /data/misc/bluetooth
+    setprop ro.bt.bdaddr_path "/data/misc/bluetooth/bdaddr"
+
+    # Bluetooth LPM
+    chmod 0220 /proc/bluetooth/sleep/lpm
+    chmod 0220 /proc/bluetooth/sleep/btwrite
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/lpm
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/btwrite
+
+    # Nvdps
+    chown system system /sys/class/graphics/fb0/device/nvdps
+
+    # Backlight
+    chown system system /sys/class/backlight/pwm-backlight/brightness
+
+    # Power
+    chown system system /sys/kernel/tegra_cap/core_cap_level
+    chown system system /sys/kernel/tegra_cap/core_cap_state
+    chown system system /sys/module/cpu_tegra/parameters/cpu_user_cap
+
+    # Power management settings
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 475000
+    write /sys/module/cpu_tegra3/parameters/no_lp 1
+    write /sys/module/tegra3_emc/parameters/emc_enable 1
+    write /sys/module/cpu_tegra3/parameters/auto_hotplug 0
+    write /sys/module/cpuidle/parameters/lp2_in_idle 1
+    write /sys/bus/nvhost/devices/gr3d/enable_3d_scaling 0
+
+    # Interactive governor settings
+    write /sys/devices/system/cpu/cpufreq/interactive/boost_factor 2
+    write /sys/devices/system/cpu/cpufreq/interactive/sustain_load 80
+    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 90000
+    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 30000
+    write /sys/devices/system/cpu/cpufreq/interactive/go_maxspeed_load 80
+
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boost_factor
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boost_factor
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/go_maxspeed_load
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/go_maxspeed_load
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/max_boost
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/max_boost
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/sustain_load
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/sustain_load
+
+    # Default Read Ahead value for sdcards
+    write /sys/block/mmcblk0/bdi/read_ahead_kb   4096
+    write /sys/block/mmcblk1/bdi/read_ahead_kb   4096
+    write /sys/block/mmcblk0/queue/read_ahead_kb 4096
+    write /sys/block/mmcblk1/queue/read_ahead_kb 4096
+
+    # BB mapping symbolic name to the logging ttyACM port
+    symlink /dev/ttyACM2 /dev/log_modem
+
+    # Enable USB Remote Wakeup on USB2 for modems
+    write /sys/bus/usb/devices/1-1/power/wakeup enabled
+
+    # USB On The Go - Host Mode
+    chown system system /sys/devices/platform/tegra-otg/enable_host
+
+# create virtual SD card at /storage/sdcard0, based on the /data/media directory
+# deamon will drop to user/group system/media_rw after initializing
+# underlying files in /data/media wil be created with user and group media_rw (1023)
+service sdcard /system/bin/sdcard -u 1023 -g 1023 -t 4 -l /data/media /mnt/shell/emulated
+    class late_start
+
+service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/usbdisk /storage/usbdisk
+    class late_start
+    disabled
+
+# eth_mac - get ethernet mac address from unimac
+service eth_mac /system/bin/eth_mac.sh
+    class main 
+    user root 
+    group root
+    oneshot
+
+# bt_mac - get bluetooth mac address from unimac
+service bt_mac /system/bin/bt_mac.sh
+    class main
+    user bluetooth
+    group bluetooth net_bt_admin
+    oneshot
+
+service p2p_supplicant /system/bin/wpa_supplicant \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -I/system/etc/wifi/wpa_supplicant_overlay.conf -N \
+    -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
+    -I/system/etc/wifi/p2p_supplicant_overlay.conf \
+    -puse_p2p_group_interface=1 -e/data/misc/wifi/entropy.bin \
+    -g@android:wpa_wlan0
+    #   we will start as root and wpa_supplicant will switch to user wifi
+    #   after setting up the capabilities required for WEXT
+    #   user wifi
+    #   group wifi inet keystore
+	class main
+	socket wpa_wlan0 dgram 660 wifi wifi
+	disabled
+	oneshot
+
+service wpa_supplicant /system/bin/wpa_supplicant \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0 -O/data/misc/wifi/sockets
+    #   we will start as root and wpa_supplicant will switch to user wifi
+    #   after setting up the capabilities required for WEXT
+    #   user wifi
+    #   group wifi inet keystore
+	class main
+	socket wpa_wlan0 dgram 660 wifi wifi
+	disabled
+	oneshot
+
+service dhcpcd_wlan0 /system/bin/dhcpcd -aABDKL
+    class main
+    disabled
+    oneshot
+
+service dhcpcd_p2p /system/bin/dhcpcd -aABKL
+    class main
+    disabled
+    oneshot
+
+service dhcpcd_eth0 /system/bin/dhcpcd -ABDKL -f/system/etc/dhcpcd/dhcpcd.conf
+     class main
+     disabled
+     oneshot
+
+service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
+    class main
+    disabled
+    oneshot
+
+service iprenew_wlan0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+service iprenew_p2p /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+service iprenew_eth0 /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+service iprenew_bt-pan /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+# create filesystems if necessary
+service setup_fs /system/bin/setup_fs \
+        /dev/block/platform/sdhci-tegra.3/by-name/UDA \
+        /dev/block/platform/sdhci-tegra.3/by-name/CAC
+    class core
+    user root
+    group root
+    oneshot
+
+# start tf_daemon service
+service tf_daemon /system/bin/tf_daemon -storageDir /data/tf -d
+    class main
+    user root
+    group shell
+
+on property:init.svc.tf_daemon=restarting
+    mkdir /data/tf
