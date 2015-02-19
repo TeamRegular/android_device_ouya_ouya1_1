@@ -8,7 +8,5 @@
 
 /data/tf(/.*)?                    u:object_r:tee_data_file:s0
 
-/sys/devices/tegradc\.0(/.*)?                u:object_r:sysfs_devices_tegradc:s0
-/sys/devices/tegradc\.1(/.*)?                u:object_r:sysfs_devices_tegradc:s0
-#/sys/devices/platform/bluedroid_pm.0/rfkill/rfkill0/state   --  u:object_r:sysfs_bluetooth_writable:s0
-#/sys/devices/platform/bluedroid_pm.0/rfkill/rfkill0/type    --  u:object_r:sysfs_bluetooth_writable:s0
+/sys/devices/tegradc\.0(/.*)?     u:object_r:sysfs_devices_tegradc:s0
+/sys/devices/tegradc\.1(/.*)?     u:object_r:sysfs_devices_tegradc:s0

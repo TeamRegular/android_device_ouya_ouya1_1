@@ -49,8 +49,9 @@ TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 USE_OPENGL_RENDERER := true
 
 # Kernel
-TARGET_KERNEL_SOURCE := kernel/ouya/ouya_1_1
-TARGET_KERNEL_CONFIG := cyanogenmod_ouya_defconfig
+TARGET_KERNEL_CMDLINE := androidboot.selinux=permissive
+TARGET_KERNEL_SOURCE  := kernel/ouya/ouya_1_1
+TARGET_KERNEL_CONFIG  := cyanogenmod_ouya_defconfig
 
 # Partition
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -83,20 +84,20 @@ BOARD_SEPOLICY_DIRS += \
         device/ouya/ouya_1_1/sepolicy
 
 BOARD_SEPOLICY_UNION += \
-        file_contexts \
-        genfs_contexts \
-        bluetooth.te \
-        device.te \
-        drmserver.te \
-        init_shell.te \
-        file.te \
-        keystore.te \
-        lmkd.te \
-        mediaserver.te \
-        surfaceflinger.te \
-        system_app.te \
-        system_server.te \
-        ueventd.te \
-        vold.te
+    bluetooth.te \
+    device.te \
+    drmserver.te \
+    file_contexts \
+    file.te \
+    genfs_contexts \
+    init_shell.te \
+    lmkd.te \
+    mediaserver.te \
+    service_contexts \
+    surfaceflinger.te \
+    system_app.te \
+    system_server.te \
+    ueventd.te \
+    vold.te
 
 MALLOC_IMPL := dlmalloc
