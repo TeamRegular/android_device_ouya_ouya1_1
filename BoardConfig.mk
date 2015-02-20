@@ -49,7 +49,7 @@ TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 USE_OPENGL_RENDERER := true
 
 # Kernel
-TARGET_KERNEL_CMDLINE := androidboot.selinux=permissive
+TARGET_KERNEL_CMDLINE := androidboot.selinux=disabled
 TARGET_KERNEL_SOURCE  := kernel/ouya/ouya_1_1
 TARGET_KERNEL_CONFIG  := cyanogenmod_ouya_defconfig
 
@@ -81,7 +81,7 @@ WIFI_DRIVER_FW_PATH_AP           := "/system/vendor/firmware/bcm4330/fw_bcmdhd_a
 
 # SELinux
 BOARD_SEPOLICY_DIRS += \
-        device/ouya/ouya_1_1/sepolicy
+    device/ouya/ouya_1_1/sepolicy
 
 BOARD_SEPOLICY_UNION += \
     bluetooth.te \
