@@ -47,8 +47,10 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
-    audio.usb.default \
-    audio.r_submix.default
+    audio_policy.tegra \
+    audio.primary.tegra \
+    audio.r_submix.default \
+    audio.usb.default
 
 # Bluetooth
 PRODUCT_COPY_FILES += \
