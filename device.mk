@@ -103,7 +103,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
-    setup_fs
+    setup_fs \
+    vim \
+    zip \
+    unrar
 
 # libhwui flags
 PRODUCT_PROPERTY_OVERRIDES += \

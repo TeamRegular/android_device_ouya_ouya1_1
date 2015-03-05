@@ -2,7 +2,7 @@
 $(call inherit-product, device/ouya/ouya_1_1/full_ouya_1_1.mk)
 
 # Inherit some common CM stuff.
-$(call inherit-product, vendor/cm/config/common_full_tablet_wifionly.mk)
+$(call inherit-product, vendor/cm/config/common_mini_tablet_wifionly.mk)
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRODUCT_NAME=ouya_1_1 \
