@@ -4,14 +4,15 @@ bin/tf_daemon
 bin/unimac
 etc/firmware/bcm4330.hcd
 etc/firmware/nvavp_aud_ucode.bin
-etc/firmware/nvavp_os_00001000.bin
 etc/firmware/nvavp_os_0ff00000.bin
-etc/firmware/nvavp_os_e0000000.bin
 etc/firmware/nvavp_os_eff00000.bin
 etc/firmware/nvavp_vid_ucode_alt.bin
 etc/nvram_4330.txt
+lib/egl/libEGL_tegra_impl.so
 lib/egl/libEGL_tegra.so
+lib/egl/libGLESv1_CM_tegra_impl.so
 lib/egl/libGLESv1_CM_tegra.so
+lib/egl/libGLESv2_tegra_impl.so
 lib/egl/libGLESv2_tegra.so
 lib/hw/audio_policy.vendor.tegra.so
 lib/hw/audio.primary_vendor.tegra.so
@@ -23,9 +24,10 @@ lib/libcgdrv.so
 lib/libnvapputil.so
 lib/libnvaudioservice.so
 lib/libnvavp.so
+lib/libnvcap_video.so
 lib/libnvddk_2d.so
 lib/libnvddk_2d_v2.so
-lib/libnvdispmgr_d.so
+lib/libnvglsi.so
 lib/libnvmm_audio.so
 lib/libnvmm_contentpipe.so
 lib/libnvmm_image.so
@@ -44,6 +46,7 @@ lib/libnvmm_writer.so
 lib/libnvodm_imager.so
 lib/libnvodm_misc.so
 lib/libnvodm_query.so
+lib/libnvomxadaptor.so
 lib/libnvomxilclient.so
 lib/libnvomx.so
 lib/libnvos.so
