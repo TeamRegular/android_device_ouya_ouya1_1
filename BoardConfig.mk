@@ -54,7 +54,7 @@ TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 USE_OPENGL_RENDERER := true
 
 # Kernel
-TARGET_KERNEL_CMDLINE := androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := androidboot.selinux=disabled
 TARGET_KERNEL_SOURCE  := kernel/ouya/ouya_1_1
 TARGET_KERNEL_CONFIG  := cyanogenmod_ouya_defconfig
 
